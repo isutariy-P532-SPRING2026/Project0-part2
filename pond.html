@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duck Pond</title>
+    <style>
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            width: 20%;
+            border-radius: 5px;
+            margin: 10px;
+            display: inline-block;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        img {
+            border-radius: 5px 5px 0 0;
+        }
+
+        .container {
+            padding: 2px 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>The Pond</h2>
+    <div id="pondContainer"></div>
+
+    <script>
+        let host = "http://localhost:8080";
+
+        async function loadPond() {
+            let response = await fetch(host + "/ducks");
+            let ducks = await response.json();
+
+            let container = document.getElementById("pondContainer");
+            container.innerHTML = "";
+
+            for (let duck of ducks) {
+                let card = document.createElement("div");
+                card.className = "card";
+
+                let img = document.createElement("img");
+                img.src = host + "/ducks/" + duck.id + "/image";
+                img.alt = duck.type;
+                img.style.width = "100%";
+
+                let info = document.createElement("div");
+                info.className = "container";
+
+                let idTag = document.createElement("h4");
+                idTag.innerHTML = "<b>" + duck.id + "</b>";
+
+                let typeTag = document.createElement("p");
+                typeTag.textContent = duck.type;
+
+                info.appendChild(idTag);
+                info.appendChild(typeTag);
+                card.appendChild(img);
+                card.appendChild(info);
+                container.appendChild(card);
+            }
+        }
+
+        loadPond();
+    </script>
+</body>
+
+</html>
