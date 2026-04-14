@@ -2,18 +2,20 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Search Ducks</title>
 </head>
 
 <body>
     <h2>Search Ducks</h2>
+
     <label>Type:</label>
     <input id="type" />
     <button onclick="search()">Search</button>
 
     <br /><br />
+
     <table border="1">
         <thead>
             <tr>
@@ -26,39 +28,32 @@
 
     <script>
         let ducks = [];
+        let host = "http://localhost:8080";
 
         async function getAll() {
-            let host = "http://localhost:8080";
             let response = await fetch(host + "/ducks");
-            ducks = await response.json();
+            return await response.json();
         }
 
         async function search() {
-            if (ducks.length == 0) {
+            if (ducks.length === 0) {
                 ducks = await getAll();
             }
 
-            // getAll() sets ducks directly, so re-fetch if still empty
-            if (!ducks || ducks.length == 0) {
-                alert("No ducks found or server not running.");
-                return;
-            }
-
-            let duckType = document.getElementById("type").value;
+            let duckType = document.getElementById("type").value.trim().toLowerCase();
             let table = document.getElementById("result");
             table.innerHTML = "";
 
             for (let duck of ducks) {
-                if (!duckType || duck.type.toLowerCase() == duckType.toLowerCase()) {
+                if (!duckType || duck.type.toLowerCase() === duckType) {
                     let row = document.createElement("tr");
+
                     let cell1 = document.createElement("td");
-                    let id = document.createTextNode(duck.id);
-                    cell1.appendChild(id);
+                    cell1.textContent = duck.id;
                     row.appendChild(cell1);
 
                     let cell2 = document.createElement("td");
-                    let type = document.createTextNode(duck.type);
-                    cell2.appendChild(type);
+                    cell2.textContent = duck.type;
                     row.appendChild(cell2);
 
                     table.appendChild(row);
